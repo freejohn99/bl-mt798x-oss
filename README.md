@@ -21,6 +21,45 @@ eg: SOC=mt7986 BOARD=redmi_ax6000 MULTI_LAYOUT=1 ./build.sh
 eg: SOC=mt7986 BOARD=jdcloud_re-cp-03 ./build.sh
 ```
 
+### CMCC RAX3000Me (fitblk + WebUI)
+
+This fork adds RAX3000Me board support on top of `fit-example`:
+
+| BOARD | Hardware | Output |
+|---|---|---|
+| `cmcc_rax3000me-nand-ddr3` | SPI-NAND, DDR3-1866 | `*-fip-fixed-parts.bin`, `*-bl2.bin` |
+| `cmcc_rax3000me-nand-ddr4` | SPI-NAND, DDR4 | `*-fip-fixed-parts.bin`, `*-bl2.bin` |
+| `cmcc_rax3000me-emmc-ddr3` | eMMC, DDR3-1866 | `*-fip.bin`, `*-bl2.bin` |
+| `cmcc_rax3000me-emmc-ddr4` | eMMC, DDR4 | `*-fip.bin`, `*-bl2.bin` |
+
+Build examples:
+
+```sh
+SOC=mt7981 BOARD=cmcc_rax3000me-nand-ddr3 ./build.sh
+SOC=mt7981 BOARD=cmcc_rax3000me-nand-ddr4 ./build.sh
+SOC=mt7981 BOARD=cmcc_rax3000me-emmc-ddr3 ./build.sh
+SOC=mt7981 BOARD=cmcc_rax3000me-emmc-ddr4 ./build.sh
+```
+
+These images use:
+
+```text
+official OpenWrt partition layout
+root=/dev/fit0 rootwait
+U-Boot WebUI failsafe
+SPI-NAND UBI for NAND variants
+eMMC production/recovery partitions for eMMC variants
+```
+
+The U-Boot defaults to the WebUI failsafe on reset (192.168.1.1). Use the
+variant that matches the actual hardware: NAND vs eMMC and DDR3 vs DDR4 are
+not interchangeable. Flashing the wrong variant can prevent the router from
+booting, and recovery may require UART or a programmer.
+
+For NAND variants the UBI size is `116736k` (114 MiB); for eMMC variants the
+root filesystem is on the GPT `production` partition. The FIP contains BL31 +
+U-Boot; BL2 is produced separately as `*-bl2.bin`.
+
 ---
 
 ### xiaomi-wr30u multi-layout uboot firmware compatibility

@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+
+/dts-v1/;
+#include "mt7981-cmcc-rax3000m-emmc.dts"
+
+/ {
+	model = "CMCC RAX3000Me (eMMC DDR4)";
+	compatible = "cmcc,rax3000me", "mediatek,mt7981";
+
+	config {
+		environment {
+			bootargs = "root=/dev/fit0 rootwait";
+			bootconf = "config-1#mt7981b-cmcc-rax3000m-emmc#mt7981b-cmcc-rax3000me-nousb";
+		};
+	};
+};
+
+&eth {
+	mediatek,switch = "auto";
+};
